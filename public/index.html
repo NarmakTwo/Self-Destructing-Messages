@@ -53,6 +53,13 @@
         }
       };
 
+      const replaceUrlsWithLinks = (text) => {
+        const urlPattern = /https?:\/\/[^\s]+/g;
+        return text.replace(urlPattern, (url) => {
+          return `<a href="${url}" target="_blank">${url}</a>`;
+        });
+      };
+
       const fetchMessages = async () => {
         const response = await fetch("/retrieve");
         if (response.ok) {
@@ -65,8 +72,9 @@
               const remainingTime = Math.max(0, 48 * 60 * 60 * 1000 - timeDifference); // 48 hours in milliseconds
               const remainingMinutes = Math.floor(remainingTime / (60 * 1000));
               const formattedTime = formatTime(remainingMinutes);
+              const formattedMessage = replaceUrlsWithLinks(msg.message);
 
-              return `<li>${msg.message} - Expires in: ${formattedTime}</li>`;
+              return `<li>${formattedMessage} - Expires in: ${formattedTime}</li>`;
             })
             .join("");
         }
