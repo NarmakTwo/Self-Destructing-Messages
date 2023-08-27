@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs').promises;
 const moment = require('moment');
+const path = require('path');
 const app = express();
 const port = 3000;
 
@@ -37,6 +38,12 @@ app.get('/retrieve', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Failed to retrieve messages.' });
   }
+});
+
+// Serve the index.html file when accessing the root URL
+app.get('/', (req, res) => {
+  const indexPath = path.join(__dirname, 'public', 'index.html');
+  res.sendFile(indexPath);
 });
 
 app.listen(port, () => {
