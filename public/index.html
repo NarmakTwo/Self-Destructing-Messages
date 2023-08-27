@@ -22,7 +22,40 @@
   </div>
 
   <script>
-    // JavaScript code here
+    document.addEventListener("DOMContentLoaded", () => {
+      const sendButton = document.getElementById("send-button");
+      const messageInput = document.getElementById("message");
+      const messagesList = document.getElementById("messages");
+
+      sendButton.addEventListener("click", async () => {
+        const message = messageInput.value;
+        if (message.trim() !== "") {
+          const response = await fetch("/send", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ message }),
+          });
+          if (response.ok) {
+            messageInput.value = "";
+            fetchMessages();
+          }
+        }
+      });
+
+      const fetchMessages = async () => {
+        const response = await fetch("/retrieve");
+        if (response.ok) {
+          const messages = await response.json();
+          messagesList.innerHTML = messages
+            .map((msg) => `<li>${msg.message} - ${msg.timestamp}</li>`)
+            .join("");
+        }
+      };
+
+      fetchMessages();
+    });
   </script>
 </body>
 </html>
