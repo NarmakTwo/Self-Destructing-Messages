@@ -63,7 +63,8 @@
       const fetchMessages = async () => {
         const response = await fetch("/retrieve");
         if (response.ok) {
-          const messages = await response.json();
+          let messages = await response.json();
+          messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort by timestamp, newest to oldest
           messagesList.innerHTML = messages
             .map((msg) => {
               const timestamp = new Date(msg.timestamp);
