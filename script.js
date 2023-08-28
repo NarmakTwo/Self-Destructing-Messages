@@ -46,7 +46,7 @@ app.get('/retrieve', async (req, res) => {
     logger.info(filteredMessages)
   } catch (err) {
     res.status(500).json({ error: 'Failed to retrieve messages.' });
-    logger.error('Failed to retrieve messages.)
+    logger.error('Failed to retrieve messages.')
   }
 });
 
