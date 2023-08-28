@@ -75,11 +75,18 @@
               const formattedTime = formatTime(remainingMinutes);
               const formattedMessage = replaceUrlsWithLinks(msg.message);
 
-              return `<li>${formattedMessage} - Expires in: ${formattedTime}</li>`;
+              return `<li>${formattedMessage} - Expires in: <span class="time" title="${msg.timestamp}">${formattedTime}</span></li>`;
             })
             .join("");
         }
       };
+
+      // Show full timestamp as tooltip when holding Shift over formatted time
+      messagesList.addEventListener("mouseover", (event) => {
+        if (event.target.classList.contains("time") && event.shiftKey) {
+          event.target.title = event.target.textContent;
+        }
+      });
 
       fetchMessages();
     });
