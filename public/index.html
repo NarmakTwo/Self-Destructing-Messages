@@ -20,6 +20,7 @@
       <ul id="messages"></ul>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const sendButton = document.getElementById("send-button");
@@ -27,7 +28,7 @@
       const messagesList = document.getElementById("messages");
 
       sendButton.addEventListener("click", async () => {
-        const message = messageInput.value;
+        const message = marked(messageInput.value);
         if (message.trim() !== "") {
           const response = await fetch("/send", {
             method: "POST",
@@ -52,13 +53,6 @@
         }
       };
 
-      const replaceUrlsWithLinks = (text) => {
-        const urlPattern = /https?:\/\/[^\s]+/g;
-        return text.replace(urlPattern, (url) => {
-          return `<a href="${url}" target="_blank">${url}</a>`;
-        });
-      };
-
       const fetchMessages = async () => {
         const response = await fetch("/retrieve");
         if (response.ok) {
@@ -72,7 +66,7 @@
               const remainingTime = Math.max(0, 48 * 60 * 60 * 1000 - timeDifference); // 48 hours in milliseconds
               const remainingMinutes = Math.floor(remainingTime / (60 * 1000));
               const formattedTime = formatTime(remainingMinutes);
-              const formattedMessage = replaceUrlsWithLinks(msg.message);
+              const formattedMessage = msg.message
 
               return `<li>${formattedMessage} - Expires in: <span class="time">${formattedTime}</span></li>`;
             })
