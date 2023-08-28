@@ -21,6 +21,26 @@
     </div>
   </div>
 
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ... (other head content) ... -->
+</head>
+<body>
+  <div class="container">
+    <h1>Self-Destructing Messages</h1>
+    <div class="message-form">
+      <label for="message">Enter your message:</label>
+      <textarea id="message" rows="4"></textarea>
+      <button id="send-button">Send Message</button>
+    </div>
+    <div class="message-list">
+      <h2>Recent Messages:</h2>
+      <ul id="messages"></ul>
+    </div>
+  </div>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const sendButton = document.getElementById("send-button");
@@ -75,21 +95,31 @@
               const formattedTime = formatTime(remainingMinutes);
               const formattedMessage = replaceUrlsWithLinks(msg.message);
 
-              return `<li>${formattedMessage} - Expires in: <span class="time" title="${msg.timestamp}">${formattedTime}</span></li>`;
+              return `<li>${formattedMessage} - Expires in: <span class="time">${formattedTime}</span></li>`;
             })
             .join("");
         }
       };
 
-      // Show full timestamp as tooltip when holding Shift over formatted time
-      messagesList.addEventListener("mouseover", (event) => {
-        if (event.target.classList.contains("time") && event.shiftKey) {
-          event.target.title = event.target.textContent;
+      // Show full timestamp on "/" key press
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "/" || event.key === "?") {
+          const timeElements = document.querySelectorAll(".time");
+          timeElements.forEach((timeElement) => {
+            const fullTimestamp = timeElement.parentElement.getAttribute("title");
+            if (fullTimestamp) {
+              timeElement.textContent = fullTimestamp;
+            }
+          });
         }
       });
 
+      // Fetch messages on page load
       fetchMessages();
     });
   </script>
+</body>
+</html>
+
 </body>
 </html>
