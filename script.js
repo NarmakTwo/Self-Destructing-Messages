@@ -3,12 +3,15 @@ const fs = require('fs').promises;
 const moment = require('moment');
 const path = require('path');
 const pino = require('pino');
+const pinoPretty = require('pino-pretty');
 const app = express();
 const port = process.env.PORT || 10000;
 
 const logger = pino({
   level: 'debug'
 });
+
+logger.pipe(pinoPretty());
 
 app.use(express.json());
 app.use(express.static(__dirname + '/public'));
